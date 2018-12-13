@@ -6,6 +6,25 @@ import socket
 import argparse
 import errno
 
+def connect_tcp(timeout, host, port):
+    """
+    Attempt to connect to the host:port combination
+
+    :param host: the hostname (IP) to connect to
+    :param port: the port number to connect to
+    :return 1: connection was successful
+    :return 0: connection was refused
+    """
+    s = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
+    s.settimeout(timeout)
+    result = s.connect_ex((host, port))
+    s.close()
+    if result == 0:
+        return 1
+    elif result == errno.ECONNREFUSED:
+        return 0
+
+
 if __name__ == "__main__":
     argument_parser = argparse.ArgumentParser()
     argument_parser.add_argument("host", help="Hostname to scan")
@@ -23,13 +42,9 @@ if __name__ == "__main__":
     for port in range(args.startport, args.endport + 1):
         print("Connecting to {}:{}".format(args.host, port))
         try:
-            s = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
-            s.settimeout(args.timeout)
-            result = s.connect_ex((args.host, port))
-            s.close()
-            if result == 0:
+            if connect_tcp(args.timeout, args.host, port):
                 successful_connections.append(port)
-            elif result == errno.ECONNREFUSED:
+            else:
                 closed_ports.append(port)
         except OSError as exc:
             print("Unable to connect: {}".format(exc))
