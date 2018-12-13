@@ -7,6 +7,14 @@ import argparse
 import errno
 
 def connect_udp(timeout_udp, host, port, payload):
+    """
+    Attempt to connect to the host:port combination over UDP
+
+    :param host: the hostname (IP) to connect to
+    :param port: the port number to connect to
+    :return 1: connection was successful
+    :return 0: connection was refused
+    """
     s = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
     s.settimeout(timeout_udp)
     s.sendto(payload, (host, port))
@@ -21,7 +29,7 @@ def connect_udp(timeout_udp, host, port, payload):
 
 def connect_tcp(timeout, host, port):
     """
-    Attempt to connect to the host:port combination
+    Attempt to connect to the host:port combination over TCP
 
     :param host: the hostname (IP) to connect to
     :param port: the port number to connect to
@@ -44,7 +52,7 @@ if __name__ == "__main__":
     argument_parser.add_argument("--timeout", type=int, default=.8, help="Timeout for each TCP connection attempt in seconds")
     argument_parser.add_argument("--timeout_udp", type=int, default=1, help="Timeout for each UDP connection attempt in seconds")
     argument_parser.add_argument("--startport", type=int, default=0, help="Starting port to scan (inclusive)")
-    argument_parser.add_argument("--endport", type=int, default=65563, help="Ending port to scan (inclusive)")
+    argument_parser.add_argument("--endport", type=int, default=65535, help="Ending port to scan (inclusive)")
     argument_parser.add_argument("--udppayload", default=None, help="Payload for UDP scans")
 
     args = argument_parser.parse_args()
