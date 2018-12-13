@@ -52,7 +52,7 @@ if __name__ == "__main__":
     udp_payload = b'aaaa'
     if args.udppayload:
         print("Reading specified payload from file {}".format(args.udppayload))
-        udp_payload = open(args.payload, 'rb').read()
+        udp_payload = open(args.udppayload, 'rb').read()
 
     print("Scanning host {}".format(args.host))
 
