@@ -59,12 +59,14 @@ if __name__ == "__main__":
     successful_connections_tcp = []
     successful_connections_udp = []
     closed_ports = []
+
     # attempt a tcp connection to each port
     for port in range(args.startport, args.endport + 1):
-        print("Connecting to {}:{}".format(args.host, port))
         try:
+            print("Connecting to {}:{} -> TCP".format(args.host, port))
             if connect_tcp(args.timeout, args.host, port):
                 successful_connections_tcp.append(port)
+            print("Connecting to {}:{} -> UDP".format(args.host, port))
             if connect_udp(args.timeout_udp, args.host, port, udp_payload):
                 successful_connections_udp.append(port)
             else:
